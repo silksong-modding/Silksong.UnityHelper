@@ -52,6 +52,12 @@
         "resolved": "6000.0.50",
         "contentHash": "hEFz1r4NGzeYXPY2yPh+/btcnwVB6EnEeRjDMCVNi19PD7VvRMvJeu46x1dNH9jYkT0B/ZXuyMBYiuI7YlRnKw=="
       },
+      "WavLib": {
+        "type": "Direct",
+        "requested": "[*-*, )",
+        "resolved": "1.1.0",
+        "contentHash": "o0fCwP0UQWkbqADwFEGTnib021fxfApOb+sXtwQZtAT7VpsKgSp1uMbwUpycGofM6XyAQKfa1x/cxW2p2mxGWA=="
+      },
       "BepInEx.BaseLib": {
         "type": "Transitive",
         "resolved": "5.4.20",

@@ -31,6 +31,7 @@
     <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.25.0" PrivateAssets="all" />
     <PackageReference Include="UnityEngine.Modules" Version="6000.0.50" IncludeAssets="compile" />
     <PackageReference Include="Silksong.GameLibs" Version="*-*" PrivateAssets="all" />
+    <PackageReference Include="WavLib" Version="*-*" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <Folder Remove="thunderstore/temp;thunderstore/dist" />
