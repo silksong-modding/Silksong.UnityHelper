@@ -5,8 +5,16 @@ using UnityEngine.SceneManagement;
 
 namespace UnityHelper.Extensions;
 
+/// <summary>
+/// Class containing utils and extension methods for Unity objects.
+/// </summary>
 public static class UnityExtensions
 {
+    /// <summary>
+    /// Get the first component on a game object of a given type.
+    /// 
+    /// If none found, one will be added and returned.
+    /// </summary>
     public static T GetOrAddComponent<T>(this GameObject go) where T : Component
     {
         T component = go.GetComponent<T>();
@@ -42,7 +50,7 @@ public static class UnityExtensions
     /// Find a game object by name in the scene. The object's name must be given in the hierarchy.
     /// </summary>
     /// <param name="scene">The scene to search.</param>
-    /// <param name="objName">The name of the object in the hierarchy, with '/' separating parent GameObjects from child GameObjects.</param>
+    /// <param name="path">The name of the object in the hierarchy, with '/' separating parent GameObjects from child GameObjects.</param>
     /// <returns>The GameObject if found; null if not.</returns>
     public static GameObject? FindGameObject(this Scene scene, string path)
     {

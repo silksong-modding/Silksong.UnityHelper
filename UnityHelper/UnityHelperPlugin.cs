@@ -2,9 +2,10 @@ using BepInEx;
 
 namespace UnityHelper;
 
-// Dummy class for showing that this exists in the output log
+#pragma warning disable CS1591
 [BepInAutoPlugin(id: "io.github.flibber-hk.unityhelper")]
 public partial class UnityHelperPlugin : BaseUnityPlugin
+#pragma warning restore CS1591
 {
     private void Awake()
     {

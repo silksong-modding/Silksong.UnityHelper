@@ -33,6 +33,9 @@ using UnityEngine;
 
 namespace UnityHelper.Util;
 
+/// <summary>
+/// Class containing utility methods for loading sprites.
+/// </summary>
 public static class SpriteUtil
 {
     /// <summary>

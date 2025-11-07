@@ -6,6 +6,9 @@ using WavLib;
 
 namespace UnityHelper.Util;
 
+/// <summary>
+/// Class containing utility methods for loading AudioClips.
+/// </summary>
 public static class WavUtil
 {
     /// <summary>
