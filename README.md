@@ -1,3 +1,3 @@
 # UnityHelper
 
-A Hollow Knight: Silksong mod.
+Library containing utility functions associated with Unity objects.
