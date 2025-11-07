@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using UnityEngine;
+using WavLib;
 
 namespace UnityHelper.Util;
 
@@ -56,7 +57,8 @@ public static class WavUtil
     /// <returns>The Unity <see cref="AudioClip"/>.</returns>
     public static AudioClip AudioClipFromStream(Stream dataStream, string origName = "")
     {
-        WavLib.WavData wavData = new WavLib.WavData();
+        WavData wavData = new();
+        wavData.Parse(dataStream);
 
         float[] wavSoundData = wavData.GetSamples();
         AudioClip audioClip = AudioClip.Create(origName, wavSoundData.Length / wavData.FormatChunk.NumChannels, wavData.FormatChunk.NumChannels, (int)wavData.FormatChunk.SampleRate, false);
