@@ -22,7 +22,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <RepositoryUrl>https://github.com/flibber-hk/Silksong.UnityHelper</RepositoryUrl>
+    <RepositoryUrl>https://github.com/silksong-modding/Silksong.UnityHelper</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
@@ -47,7 +47,7 @@
     <PropertyGroup>
       <ThunderstoreDir>$(ProjectDir)/../thunderstore</ThunderstoreDir>
     </PropertyGroup>
-    <Copy SourceFiles="@(Binaries)" DestinationFolder="$(SilksongFolder)/BepInEx/plugins/flibber-hk-$(AssemblyTitle)" Condition="'$(SilksongFolder)' != '' And Exists('$(SilksongFolder)')" />
+    <Copy SourceFiles="@(Binaries)" DestinationFolder="$(SilksongFolder)/BepInEx/plugins/silksong_modding-$(AssemblyTitle)" Condition="'$(SilksongFolder)' != '' And Exists('$(SilksongFolder)')" />
     <RemoveDir Directories="$(ThunderstoreDir)/temp;$(ThunderstoreDir)/dist" />
     <MakeDir Directories="$(ThunderstoreDir)/temp" />
     <Copy SourceFiles="@(Binaries)" DestinationFolder="$(ThunderstoreDir)/temp" />
