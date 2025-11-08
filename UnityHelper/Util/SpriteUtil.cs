@@ -18,14 +18,19 @@ public static class SpriteUtil
     /// <param name="path">The path to the image.</param>
     /// <param name="pixelsPerUnit">The pixels per unit. Changing this value will scale the size of the sprite accordingly.</param>
     /// <returns>A Sprite object.</returns>
-    [SuppressMessage("Reliability", "CA2022:Avoid inexact read with 'Stream.Read'",
-        Justification = "It's already stream.Length")]
     public static Sprite LoadEmbeddedSprite(Assembly asm, string path, float pixelsPerUnit = 64f)
     {
         using Stream stream = asm.GetManifestResourceStream(path);
 
         byte[] buffer = new byte[stream.Length];
-        stream.Read(buffer, 0, buffer.Length);
+        int bytesRead = stream.Read(buffer, 0, buffer.Length);
+        if (bytesRead != buffer.Length)
+        {
+            throw new IOException($"""
+                Failed to read the entire resource stream for path '{path}' in assembly '{asm.FullName}'.
+                Expected {stream.Length} bytes, but read {bytesRead}.
+                """);
+        }
 
         return LoadSpriteFromArray(buffer, pixelsPerUnit);
     }
