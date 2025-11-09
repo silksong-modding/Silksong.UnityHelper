@@ -71,7 +71,7 @@ public static class UnityExtensions
             return null;
         }
 
-        string[] pathParts = path.Split('/');
+        string[] pathParts = path.Split('/', 2);
         string rootName = pathParts[0];
 
         GameObject? root = scene.GetRootGameObjects().FirstOrDefault(x => x.name == rootName);
@@ -85,7 +85,6 @@ public static class UnityExtensions
             return root;
         }
 
-        string childPath = path[(rootName.Length + 1)..];
-        return root.FindChild(childPath);
+        return root.FindChild(pathParts[1]);
     }
 }
