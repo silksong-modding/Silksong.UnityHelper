@@ -47,6 +47,18 @@ public static class UnityExtensions
     }
 
     /// <summary>
+    /// Find a child of the provided GameObject.
+    /// </summary>
+    /// <param name="go">The root object to find the child of.</param>
+    /// <param name="path">The sub-path to the child, with '/' separating parent GameObjects from child GameObjects.</param>
+    /// <returns>The child GameObject if found; null if not.</returns>
+    public static GameObject? FindChild(this GameObject go, string path)
+    {
+        var transform = go.transform.Find(path);
+        return transform != null ? transform.gameObject : null;
+    }
+
+    /// <summary>
     /// Find a game object by name in the scene. The object's name must be given in the hierarchy.
     /// </summary>
     /// <param name="scene">The scene to search.</param>
@@ -59,7 +71,7 @@ public static class UnityExtensions
             return null;
         }
 
-        string[] pathParts = path.Split('/');
+        string[] pathParts = path.Split('/', 2);
         string rootName = pathParts[0];
 
         GameObject? root = scene.GetRootGameObjects().FirstOrDefault(x => x.name == rootName);
@@ -73,14 +85,6 @@ public static class UnityExtensions
             return root;
         }
 
-        string childPath = path[(rootName.Length + 1)..];
-        Transform childTransform = root.transform.Find(childPath);
-
-        if (childTransform != null)
-        {
-            return childTransform.gameObject;
-        }
-
-        return null;
+        return root.FindChild(pathParts[1]);
     }
 }
