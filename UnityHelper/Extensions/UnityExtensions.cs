@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using BepInEx.Logging;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Logger = BepInEx.Logging.Logger;
 
 namespace Silksong.UnityHelper.Extensions;
 
@@ -10,6 +14,8 @@ namespace Silksong.UnityHelper.Extensions;
 /// </summary>
 public static class UnityExtensions
 {
+    private static readonly ManualLogSource Log = Logger.CreateLogSource($"{nameof(UnityHelperPlugin)}.{nameof(UnityExtensions)}");
+
     /// <summary>
     /// Get the first component on a game object of a given type.
     /// 
@@ -87,4 +93,65 @@ public static class UnityExtensions
 
         return root.FindChild(pathParts[1]);
     }
+
+    /// <summary>
+    /// Execute the given action after the specified number of seconds.
+    /// </summary>
+    /// <param name="component">The component used to start the coroutine. Often a plugin instance or <see cref="GameManager.instance"/>.</param>
+    /// <param name="toInvoke">An Action to invoke.</param>
+    /// <param name="seconds">The number of seconds to wait before invoking.</param>
+    public static void InvokeAfterSeconds(this MonoBehaviour component, Action toInvoke, float seconds)
+    {
+        component.StartCoroutine(doInvoke());
+
+        IEnumerator doInvoke()
+        {
+            yield return new WaitForSeconds(seconds);
+            
+            try
+            {
+                toInvoke();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error invoking action {toInvoke.Method.Name}\n" + ex);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Execute the given action after the specified number of frames.
+    /// </summary>
+    /// <param name="component"><inheritdoc cref="InvokeAfterSeconds"/></param>
+    /// <param name="toInvoke"><inheritdoc cref="InvokeAfterSeconds"/></param>
+    /// <param name="numFrames">The number of frames to wait.</param>
+    public static void InvokeAfterFrames(this MonoBehaviour component, Action toInvoke, int numFrames)
+    {
+        component.StartCoroutine(doInvoke());
+
+        IEnumerator doInvoke()
+        {
+            for (int i = 0; i < numFrames; i++)
+            {
+                yield return null;
+            }
+
+            try
+            {
+                toInvoke();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError($"Error invoking action {toInvoke.Method.Name}\n" + ex);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Execute the given action after 1 frame has passed.
+    /// </summary>
+    /// <param name="component"><inheritdoc cref="InvokeAfterSeconds"/></param>
+    /// <param name="toInvoke"><inheritdoc cref="InvokeAfterSeconds"/></param>
+    public static void InvokeNextFrame(this MonoBehaviour component, Action toInvoke) => component.InvokeAfterFrames(toInvoke, 1);
+
 }
