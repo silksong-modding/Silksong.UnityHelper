@@ -80,7 +80,10 @@ public static class Tk2dUtil
     /// Sprite collections can be used to create <see cref="tk2dSpriteAnimationFrame"/>s
     /// for use in <see cref="tk2dSpriteAnimationClip"/>s.
     /// </summary>
-    /// <param name="sprites">The sprites to construct a collection from.</param>
+    /// <param name="sprites">
+    ///     The sprites to construct a collection from. If <paramref name="spriteNames"/>
+    ///     is not set, each sprite must have a unique <see cref="UObject.name"/>.
+    /// </param>
     /// <param name="spriteNames">
     ///     Unique names to be assigned to each sprite in the collection.
     ///     If unset, each sprite's <see cref="UObject.name"/> field is used.
@@ -202,7 +205,7 @@ public static class Tk2dUtil
         };
 
     /// <summary>
-    /// Create a collection of <see cref="tk2dSpriteAnimationFrame"/>s from multiple
+    /// Creates multiple <see cref="tk2dSpriteAnimationFrame"/>s from multiple
     /// sprites in this collection.
     /// </summary>
     /// <param name="collection">The collection to pull sprites from.</param>

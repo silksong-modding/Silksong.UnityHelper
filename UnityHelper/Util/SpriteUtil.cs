@@ -17,10 +17,7 @@ public static class SpriteUtil
     /// <param name="path">The path to the image.</param>
     /// <param name="pixelsPerUnit">The pixels per unit. Changing this value will scale the size of the sprite accordingly.</param>
     /// <param name="pivot">The pivot point of the resulting Sprite. Defaults to the center.</param>
-    /// <param name="makeUnreadable">
-    ///     Whether or not to mark the Sprite's underlying texture as unreadable.
-    ///     This saves on RAM usage but prevents the Sprite's pixel data from being accessed in the future.
-    /// </param>
+    /// <param name="makeUnreadable">Whether or not to mark the Sprite's underlying texture as unreadable.</param>
     /// <returns>A Sprite object.</returns>
     public static Sprite LoadEmbeddedSprite(Assembly asm, string path, float pixelsPerUnit = 64f, Vector2? pivot = null, bool makeUnreadable = false)
     {
@@ -36,7 +33,9 @@ public static class SpriteUtil
                 """);
         }
 
-        return LoadSpriteFromArray(buffer, pixelsPerUnit, pivot, makeUnreadable);
+        var result = LoadSpriteFromArray(buffer, pixelsPerUnit, pivot, makeUnreadable);
+        result.name = result.texture.name = path;
+        return result;
     }
 
     /// <summary>
@@ -45,10 +44,7 @@ public static class SpriteUtil
     /// <param name="fileName"></param>
     /// <param name="pixelsPerUnit">The pixels per unit. Changing this value will scale the size of the sprite accordingly.</param>
     /// <param name="pivot">The pivot point of the resulting Sprite. Defaults to the center.</param>
-    /// <param name="makeUnreadable">
-    ///     Whether or not to mark the Sprite's underlying texture as unreadable.
-    ///     This saves on RAM usage but prevents the Sprite's pixel data from being accessed in the future.
-    /// </param>
+    /// <param name="makeUnreadable">Whether or not to mark the Sprite's underlying texture as unreadable.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
     public static Sprite LoadSpriteFromFile(string fileName, float pixelsPerUnit = 64f, Vector2? pivot = null, bool makeUnreadable = false)
@@ -65,7 +61,9 @@ public static class SpriteUtil
 
         byte[] fileBytes = File.ReadAllBytes(fileName);
 
-        return LoadSpriteFromArray(fileBytes, pixelsPerUnit, pivot, makeUnreadable);
+        var result = LoadSpriteFromArray(fileBytes, pixelsPerUnit, pivot, makeUnreadable);
+        result.name = result.texture.name = Path.GetFileName(fileName);
+        return result;
     }
 
     /// <summary>
@@ -74,10 +72,7 @@ public static class SpriteUtil
     /// <param name="buffer"></param>
     /// <param name="pixelsPerUnit">The pixels per unit. Changing this value will scale the size of the sprite accordingly.</param>
     /// <param name="pivot">The pivot point of the resulting Sprite. Defaults to the center.</param>
-    /// <param name="makeUnreadable">
-    ///     Whether or not to mark the Sprite's underlying texture as unreadable.
-    ///     This saves on RAM usage but prevents the Sprite's pixel data from being accessed in the future.
-    /// </param>
+    /// <param name="makeUnreadable">Whether or not to mark the Sprite's underlying texture as unreadable.</param>
     /// <returns></returns>
     public static Sprite LoadSpriteFromArray(byte[] buffer, float pixelsPerUnit = 64f, Vector2? pivot = null, bool makeUnreadable = false)
     {
