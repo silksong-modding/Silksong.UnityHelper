@@ -104,19 +104,19 @@ public static class Tk2dUtil
         spriteCenters ??= sprites.Select(x => new Vector2(x.width / 2f, x.height / 2f));
 
         #region Error Checking
-        int frameCount = sprites.Count();
-        if (frameCount != spriteNames.Count())
+        int spriteCount = sprites.Count();
+        if (spriteCount != spriteNames.Count())
         {
             throw new ArgumentException($"Number of {nameof(spriteNames)} does not match number of {nameof(sprites)}", nameof(spriteNames));
         }
-        if (frameCount != spriteCenters.Count())
+        if (spriteCount != spriteCenters.Count())
         {
             throw new ArgumentException($"Number of {nameof(spriteCenters)} does not match number of {nameof(sprites)}", nameof(spriteCenters));
         }
 
-        if (spriteNames.Any(string.IsNullOrWhiteSpace))
+        if (spriteNames.Distinct().Count() < spriteCount)
         {
-            throw new ArgumentException($"Sprite names must not be null, empty, or only whitespace.", nameof(spriteNames));
+            throw new ArgumentException($"Sprites in the same collection must have unique names.", nameof(spriteNames));
         }
         #endregion
 
@@ -125,7 +125,7 @@ public static class Tk2dUtil
 
         // Make a basic spritesheet
         Texture2D atlas = new(1, 1);
-        Rect[] spriteRegions = atlas.PackTextures(readableSprites, 0);
+        Rect[] spriteRegions = atlas.PackTextures(readableSprites, padding: 2);
         atlas.Apply(false, makeNoLongerReadable: true);
 
         for (int i = 0; i < spriteRegions.Length; i++) {
@@ -159,7 +159,9 @@ public static class Tk2dUtil
         return spriteCollection;
     }
 
-    /// <inheritdoc cref="CreateTk2dSpriteCollection(IEnumerable{Texture2D}, IEnumerable{string}?, IEnumerable{Vector2}?, float)" path="//*[not(self::param[@name='spriteCenters'])]"/>
+    /// <inheritdoc
+    ///     cref="CreateTk2dSpriteCollection(IEnumerable{Texture2D}, IEnumerable{string}?, IEnumerable{Vector2}?, float)"
+    ///     path="//*[not(self::param[@name='spriteCenters'])]" />
     /// <param name="spriteCenters">
     ///     The center or pivot point, in pixels, of each sprite in the collection.
     ///     If unset, the <see cref="Sprite.pivot"/> field of each sprite is used.
