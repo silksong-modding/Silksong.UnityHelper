@@ -15,12 +15,16 @@ public static class SpriteUtil
     /// </summary>
     /// <param name="asm">The assembly to load from.</param>
     /// <param name="path">The path to the image.</param>
-    /// <param name="pixelsPerUnit">The pixels per unit. Changing this value will scale the size of the sprite accordingly.</param>
-    /// <param name="pivot">The pivot point of the resulting Sprite. Defaults to the center.</param>
-    /// <param name="makeUnreadable">Whether or not to mark the Sprite's underlying texture as unreadable.</param>
+    /// <inheritdoc
+    ///     cref="LoadSpriteFromArray(byte[], float, Vector2?, bool)"
+    ///     path="//param" />
     /// <returns>A Sprite object.</returns>
-    public static Sprite LoadEmbeddedSprite(Assembly asm, string path, float pixelsPerUnit = 64f, Vector2? pivot = null, bool makeUnreadable = false)
-    {
+    public static Sprite LoadEmbeddedSprite(
+        Assembly asm, string path,
+        #pragma warning disable CS1573
+        float pixelsPerUnit = 64f, Vector2? pivot = null, bool makeUnreadable = false
+        #pragma warning restore CS1573
+    ) {
         using Stream stream = asm.GetManifestResourceStream(path);
 
         byte[] buffer = new byte[stream.Length];
@@ -45,14 +49,18 @@ public static class SpriteUtil
     /// <summary>
     /// Load an image from a file on disc and return a Sprite.
     /// </summary>
-    /// <param name="fileName"></param>
-    /// <param name="pixelsPerUnit">The pixels per unit. Changing this value will scale the size of the sprite accordingly.</param>
-    /// <param name="pivot">The pivot point of the resulting Sprite. Defaults to the center.</param>
-    /// <param name="makeUnreadable">Whether or not to mark the Sprite's underlying texture as unreadable.</param>
+    /// <param name="fileName">The path to the image file.</param>
+    /// <inheritdoc
+    ///     cref="LoadSpriteFromArray(byte[], float, Vector2?, bool)"
+    ///     path="//param" />
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static Sprite LoadSpriteFromFile(string fileName, float pixelsPerUnit = 64f, Vector2? pivot = null, bool makeUnreadable = false)
-    {
+    public static Sprite LoadSpriteFromFile(
+        string fileName,
+        #pragma warning disable CS1573
+        float pixelsPerUnit = 64f, Vector2? pivot = null, bool makeUnreadable = false
+        #pragma warning restore CS1573
+    ) {
         if (string.IsNullOrWhiteSpace(fileName))
         {
             throw new ArgumentException("Filename cannot be empty", nameof(fileName));
