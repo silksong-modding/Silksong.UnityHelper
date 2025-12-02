@@ -38,6 +38,10 @@ public static class SpriteUtil
         return result;
     }
 
+    /// <inheritdoc cref="LoadEmbeddedSprite(Assembly, string, float, Vector2?, bool)" />
+    public static Sprite LoadEmbeddedSprite(Assembly asm, string path, float pixelsPerUnit)
+        => LoadEmbeddedSprite(asm, path, pixelsPerUnit, null);
+
     /// <summary>
     /// Load an image from a file on disc and return a Sprite.
     /// </summary>
@@ -62,9 +66,13 @@ public static class SpriteUtil
         byte[] fileBytes = File.ReadAllBytes(fileName);
 
         var result = LoadSpriteFromArray(fileBytes, pixelsPerUnit, pivot, makeUnreadable);
-        result.name = result.texture.name = Path.GetFileName(fileName);
+        result.name = result.texture.name = Path.GetFileNameWithoutExtension(fileName);
         return result;
     }
+
+    /// <inheritdoc cref="LoadSpriteFromFile(string, float, Vector2?, bool)"/>
+    public static Sprite LoadSpriteFromFile(string fileName, float pixelsPerUnit)
+        => LoadSpriteFromFile(fileName, pixelsPerUnit, null);
 
     /// <summary>
     /// Create a sprite from a byte array.
@@ -82,6 +90,10 @@ public static class SpriteUtil
 
         return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), pivot ?? Vector2.one * 0.5f, pixelsPerUnit);
     }
+
+    /// <inheritdoc cref="LoadSpriteFromArray(byte[], float, Vector2?, bool)"/>
+    public static Sprite LoadSpriteFromArray(byte[] buffer, float pixelsPerUnit)
+        => LoadSpriteFromArray(buffer, pixelsPerUnit, null);
 
     /// <summary>
     /// If the given texture is unreadable, returns a readable copy of it.
