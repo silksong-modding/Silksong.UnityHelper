@@ -16,6 +16,13 @@ public static class Tk2dUtil
     /// <summary>
     /// Creates a <see cref="tk2dSpriteAnimationClip"/> from a collection of sprites.
     /// </summary>
+    /// <remarks>
+    /// All sprites passed to this function should be unique. If you need to hold on a
+    /// sprite for multiple frames in one animation, you should make a
+    /// <see cref="tk2dSpriteCollectionData"/> from the unique sprites, and then create
+    /// frames and animation clips manually.
+    /// See <see cref="CreateTk2dSpriteCollection(IEnumerable{Sprite}, IEnumerable{string}?, IEnumerable{Vector2}?, float)"/>.
+    /// </remarks>
     /// <param name="name">The name of the animation clip.</param>
     /// <param name="fps">The speed of the animation in frames per second.</param>
     /// <param name="frames">
@@ -23,11 +30,11 @@ public static class Tk2dUtil
     ///     Each sprite must have a unique <see cref="UObject.name"/>.
     /// </param>
     /// <param name="wrapMode">
-    ///     The wrap mode for the animation.
-    ///     This determines if and how the animation loops.
+    ///     The wrap mode for the animation. This determines if and how the animation loops.
     /// </param>
     /// <param name="loopStart">
-    ///     The frame index that each loop of a looping animation starts at.
+    ///     The frame index that each loop of an animation with
+    ///     <see cref="WrapMode.LoopSection"/> starts at.
     /// </param>
     /// <param name="pixelsPerUnit">
     ///     The in-game resolution for all sprites in the collection. Higher values scale
@@ -35,12 +42,8 @@ public static class Tk2dUtil
     /// </param>
     /// <returns>A <see cref="tk2dSpriteAnimationClip"/> object.</returns>
     public static tk2dSpriteAnimationClip CreateTk2dAnimationClip(
-        string name,
-        int fps,
-        IEnumerable<Texture2D> frames,
-        WrapMode wrapMode = WrapMode.Once,
-        int loopStart = 0,
-        float pixelsPerUnit = 64f
+        string name, int fps, IEnumerable<Texture2D> frames,
+        WrapMode wrapMode = WrapMode.Once, int loopStart = 0, float pixelsPerUnit = 64f
     ) {
         var spriteCollection = CreateTk2dSpriteCollection(
             frames, pixelsPerUnit: pixelsPerUnit
@@ -50,18 +53,14 @@ public static class Tk2dUtil
             fps = fps,
             wrapMode = wrapMode,
             loopStart = loopStart,
-            frames = spriteCollection.CreateFrames([.. frames.Select(x => x.name)]),
+            frames = spriteCollection.CreateFrames(frames.Select(x => x.name)),
         };
     }
 
     /// <inheritdoc cref="CreateTk2dAnimationClip(string, int, IEnumerable{Texture2D}, WrapMode, int, float)"/>
     public static tk2dSpriteAnimationClip CreateTk2dAnimationClip(
-        string name,
-        int fps,
-        IEnumerable<Sprite> frames,
-        WrapMode wrapMode = WrapMode.Once,
-        int loopStart = 0,
-        float pixelsPerUnit = 64f
+        string name, int fps, IEnumerable<Sprite> frames,
+        WrapMode wrapMode = WrapMode.Once, int loopStart = 0, float pixelsPerUnit = 64f
     ) {
         var spriteCollection = CreateTk2dSpriteCollection(
             frames, pixelsPerUnit: pixelsPerUnit
@@ -71,7 +70,7 @@ public static class Tk2dUtil
             fps = fps,
             wrapMode = wrapMode,
             loopStart = loopStart,
-            frames = spriteCollection.CreateFrames([.. frames.Select(x => x.name)]),
+            frames = spriteCollection.CreateFrames(frames.Select(x => x.name)),
         };
     }
 
@@ -80,6 +79,12 @@ public static class Tk2dUtil
     /// Sprite collections can be used to create <see cref="tk2dSpriteAnimationFrame"/>s
     /// for use in <see cref="tk2dSpriteAnimationClip"/>s.
     /// </summary>
+    /// <remarks>
+    /// All sprites in a collection should be unique. If you need to hold on a sprite for
+    /// multiple frames in an animation, you should add it to the collection once, then
+    /// create multiple <see cref="tk2dSpriteAnimationFrame"/>s of the same sprite to
+    /// pass to the animation clip.
+    /// </remarks>
     /// <param name="sprites">
     ///     The sprites to construct a collection from. If <paramref name="spriteNames"/>
     ///     is not set, each sprite must have a unique <see cref="UObject.name"/>.
