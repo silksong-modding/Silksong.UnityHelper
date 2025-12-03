@@ -1,7 +1,3 @@
----
-_layout: landing
----
-
 # About Silksong.UnityHelper
 
 Silksong.UnityHelper is a library to help with common Unity operations.
