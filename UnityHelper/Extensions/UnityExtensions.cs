@@ -95,6 +95,54 @@ public static class UnityExtensions
     }
 
     /// <summary>
+    /// Enumerates all transforms in the scene in depth-first order.
+    /// </summary>
+    /// <returns>An enumerator over pairs (hierarchy path, transform) in the scene.</returns>
+    public static IEnumerable<(string path, Transform transform)> EnumerateHierarchy(this Scene scene)
+    {
+        foreach (GameObject rootGo in scene.GetRootGameObjects())
+        {
+            foreach (var pair in rootGo.transform.EnumerateHierarchy())
+            {
+                yield return pair;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Enumerates all transforms in the hierarchy for <paramref name="transform"/> in depth-first order.
+    /// </summary>
+    /// <returns>An enumerator over pairs (hierarchy path, transform) in the transform's hierarchy.
+    /// Paths will be given relative to <paramref name="transform"/>, which will be different to
+    /// full scene hierarchy paths if it is not the transform of a root game object.</returns>
+    public static IEnumerable<(string path, Transform transform)> EnumerateHierarchy(this Transform transform)
+    {
+        string name = transform.name;
+        yield return (name, transform);
+        foreach (Transform child in transform)
+        {
+            foreach (var pair in EnumerateHierarchyInternal(child, name))
+            {
+                yield return pair;
+            }
+        }
+    }
+
+    private static IEnumerable<(string path, Transform transform)> EnumerateHierarchyInternal(this Transform t, string parent)
+    {
+        string childName = t.name;
+        string path = $"{parent}/{childName}";
+        yield return (path, t);
+        foreach (Transform child in t)
+        {
+            foreach (var pair in EnumerateHierarchyInternal(child, path))
+            {
+                yield return pair;
+            }
+        }
+    }
+
+    /// <summary>
     /// Execute the given action after the specified number of seconds.
     /// </summary>
     /// <param name="component">The component used to start the coroutine. Often a plugin instance or <see cref="GameManager.instance"/>.</param>
