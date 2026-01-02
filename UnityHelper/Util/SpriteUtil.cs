@@ -84,6 +84,25 @@ public static class SpriteUtil
     public static Sprite LoadSpriteFromArray(byte[] buffer, float pixelsPerUnit)
         => LoadSpriteFromArray(buffer, pixelsPerUnit, null);
 
+    /// <summary>
+    /// Converts the given <see cref="Sprite"/>'s alpha format to premultiplied.
+    /// The sprite's underlying texture must be readable.
+    /// </summary>
+    /// <remarks>
+    /// If a sprite has a fuzzy white edge, or a white tint in areas where it's
+    /// partially transparent, running it through this function may fix the issue.
+    /// </remarks>
+    /// <exception cref="ArgumentException">
+    ///     If the Sprite's underlying texture is not readable.
+    /// </exception>
+    /// <param name="source">The sprite to convert.</param>
+    /// <returns>The same <see cref="Sprite"/>.</returns>
+    public static Sprite PremultiplyAlpha(this Sprite source)
+    {
+        source.texture.PremultiplyAlpha();
+        return source;
+    }
+
     #endregion
 
     #region Texture2D
@@ -128,9 +147,36 @@ public static class SpriteUtil
     /// <returns>A <see cref="Texture2D"/> object.</returns>
     public static Texture2D LoadTextureFromArray(byte[] buffer, bool makeUnreadable = false)
     {
-        Texture2D tex = new(2, 2);
+        // The texture format here doesn't matter, but this constructor can
+        // prevent textures from generating mipmaps.
+        Texture2D tex = new(2, 2, TextureFormat.RGBA32, mipChain: false);
         tex.LoadImage(buffer, makeUnreadable);
         return tex;
+    }
+
+    /// <summary>
+    /// Converts the given <see cref="Texture2D"/>'s alpha format to premultiplied.
+    /// The texture must be readable.
+    /// </summary>
+    /// <remarks>
+    /// If a texture has a fuzzy white edge, or a white tint in areas where it's
+    /// partially transparent, running it through this function may fix the issue.
+    /// </remarks>
+    /// <exception cref="ArgumentException">If the texture is not readable.</exception>
+    /// <param name="source">The texture to convert.</param>
+    /// <returns>The same <see cref="Texture2D"/>.</returns>
+    public static Texture2D PremultiplyAlpha(this Texture2D source)
+    {
+        Color32[] pixels = source.GetPixels32();
+
+        for (int i = 0; i < pixels.Length; i++) {
+            Color px = pixels[i];
+            pixels[i] = new Color(px.r * px.a, px.g * px.a, px.b * px.a, px.a);
+        }
+
+        source.SetPixels32(pixels);
+        source.Apply();
+        return source;
     }
 
     /// <summary>
@@ -152,7 +198,7 @@ public static class SpriteUtil
         var previous = RenderTexture.active;
         RenderTexture.active = temp;
 
-        var readable = new Texture2D(tex.width, tex.height);
+        var readable = new Texture2D(tex.width, tex.height, tex.format, mipChain: tex.mipmapCount > 1);
         readable.ReadPixels(new Rect(0, 0, temp.width, temp.height), 0, 0);
         readable.Apply();
 
