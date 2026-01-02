@@ -86,11 +86,15 @@ public static class SpriteUtil
 
     /// <summary>
     /// Converts the given <see cref="Sprite"/>'s alpha format to premultiplied.
+    /// The sprite's underlying texture must be readable.
     /// </summary>
     /// <remarks>
     /// If a sprite has a fuzzy white edge, or a white tint in areas where it's
     /// partially transparent, running it through this function may fix the issue.
     /// </remarks>
+    /// <exception cref="ArgumentException">
+    ///     If the Sprite's underlying texture is not readable.
+    /// </exception>
     /// <param name="source">The sprite to convert.</param>
     /// <returns>The same <see cref="Sprite"/>.</returns>
     public static Sprite PremultiplyAlpha(this Sprite source)
@@ -152,11 +156,13 @@ public static class SpriteUtil
 
     /// <summary>
     /// Converts the given <see cref="Texture2D"/>'s alpha format to premultiplied.
+    /// The texture must be readable.
     /// </summary>
     /// <remarks>
     /// If a texture has a fuzzy white edge, or a white tint in areas where it's
     /// partially transparent, running it through this function may fix the issue.
     /// </remarks>
+    /// <exception cref="ArgumentException">If the texture is not readable.</exception>
     /// <param name="source">The texture to convert.</param>
     /// <returns>The same <see cref="Texture2D"/>.</returns>
     public static Texture2D PremultiplyAlpha(this Texture2D source)
