@@ -128,7 +128,9 @@ public static class SpriteUtil
     /// <returns>A <see cref="Texture2D"/> object.</returns>
     public static Texture2D LoadTextureFromArray(byte[] buffer, bool makeUnreadable = false)
     {
-        Texture2D tex = new(2, 2);
+        // The texture format here doesn't matter, but this constructor can
+        // prevent textures from generating mipmaps.
+        Texture2D tex = new(2, 2, TextureFormat.RGBA32, mipChain: false);
         tex.LoadImage(buffer, makeUnreadable);
         return tex;
     }
@@ -152,7 +154,7 @@ public static class SpriteUtil
         var previous = RenderTexture.active;
         RenderTexture.active = temp;
 
-        var readable = new Texture2D(tex.width, tex.height);
+        var readable = new Texture2D(tex.width, tex.height, tex.format, mipChain: tex.mipmapCount > 1);
         readable.ReadPixels(new Rect(0, 0, temp.width, temp.height), 0, 0);
         readable.Apply();
 
