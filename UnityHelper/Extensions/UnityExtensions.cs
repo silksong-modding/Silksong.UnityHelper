@@ -80,18 +80,28 @@ public static class UnityExtensions
         string[] pathParts = path.Split('/', 2);
         string rootName = pathParts[0];
 
-        GameObject? root = scene.GetRootGameObjects().FirstOrDefault(x => x.name == rootName);
-        if (root == null)
+        // Handle cases where multiple root game objects share the same name
+        foreach (GameObject root in scene.GetRootGameObjects().Where(x => x.name == rootName))
         {
-            return null;
+            if (root == null)
+            {
+                continue;
+            }
+
+            if (pathParts.Length == 1)
+            {
+                return root;
+            }
+
+            GameObject? child = root.FindChild(pathParts[1]);
+            if (child != null)
+            {
+                return child;
+            }
         }
 
-        if (pathParts.Length == 1)
-        {
-            return root;
-        }
-
-        return root.FindChild(pathParts[1]);
+        return null;
+        
     }
 
     /// <summary>
