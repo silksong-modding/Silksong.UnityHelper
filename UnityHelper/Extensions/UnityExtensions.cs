@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Logger = BepInEx.Logging.Logger;
+using UObject = UnityEngine.Object;
 
 namespace Silksong.UnityHelper.Extensions;
 
@@ -29,6 +30,43 @@ public static class UnityExtensions
             component = go.AddComponent<T>();
         }
         return component;
+    }
+
+    /// <summary>
+    /// Destroy the first component on a game object of a given type.
+    /// </summary>
+    /// <returns>A boolean indicating whether a component was removed.</returns>
+    public static bool RemoveComponent<T>(this GameObject go) where T : Component
+    {
+        T component = go.GetComponent<T>();
+        if (component == null)
+        {
+            return false;
+        }
+
+        UObject.Destroy(component);
+        return true;
+    }
+
+    /// <summary>
+    /// Destroy all components on a game object of a given type.
+    /// </summary>
+    /// <returns>An integer indicating the number of components removed.</returns>
+    public static int RemoveComponents<T>(this GameObject go) where T : Component
+    {
+        T[] components = go.GetComponents<T>();
+
+        int total = 0;
+        foreach (T component in components)
+        {
+            if (component != null)
+            {
+                UObject.Destroy(component);
+                total++;
+            }
+        }
+
+        return total;
     }
 
     /// <inheritdoc cref="GetNameInHierarchy(Transform)"/>
